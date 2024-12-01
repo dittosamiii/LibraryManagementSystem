@@ -11,7 +11,7 @@ public class libraryDButil {
 		try {
 			String dbUrl = "jdbc:mysql://localhost:3306/Library";
 			String user = "root";
-			String pass = "root";
+			String pass = "toor";
 			mycon = DriverManager.getConnection(dbUrl, user, pass);
 
 		} catch (SQLException e) {
