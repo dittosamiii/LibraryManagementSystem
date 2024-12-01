@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< HEAD
 	<name>LibraryManagementSystem</name>
+=======
+	<name>library</name>
+>>>>>>> 1e3afc53d89e6a69a5f8d122d9c38b870ec78f6b
 	<comment></comment>
 	<projects>
 	</projects>
@@ -20,6 +24,7 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 	</natures>
+<<<<<<< HEAD
 	<filteredResources>
 		<filter>
 			<id>1733031211519</id>
@@ -31,4 +36,6 @@
 			</matcher>
 		</filter>
 	</filteredResources>
+=======
+>>>>>>> 1e3afc53d89e6a69a5f8d122d9c38b870ec78f6b
 </projectDescription>

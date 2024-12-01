@@ -22,7 +22,9 @@ public class libraryDAO {
 	public void showAvailableBooks() {
 		try (Connection mycon = libraryDButil.LibraryConnection();
 				PreparedStatement pstmt = mycon.prepareStatement("SELECT * FROM books");
+<<<<<<< HEAD
 				ResultSet myrs = pstmt.executeQuery()) {
+=======
 
 			System.out.println("Books Available in the Library");
 			System.out.println("ID\t\tName\t\t\tAuthor\t\t\t  Price\t    Availability");
@@ -38,11 +40,15 @@ public class libraryDAO {
 
 	// Adding books to our database using addBook Method
 	public void addBook(String name, String author, int price) {
-		try (Connection mycon = libraryDButil.LibraryConnection();) {
-			Statement mystmt = mycon.createStatement();
+		try (Connection mycon = libraryDButil.LibraryConnection();
+				PreparedStatement pstmt = mycon.prepareStatement(
+						"insert into books (Book_name, Authors_name, Price, Available) values (?,?,?,1)");) {
 
-			mystmt.executeUpdate("insert into books (Book_name, Authors_name, Price, Available) " + "values ('" + name
-					+ "', '" + author + "', " + price + ", 1)");
+			pstmt.setString(1, name);
+			pstmt.setString(2, author);
+			pstmt.setInt(3, price);
+			pstmt.executeUpdate();
+
 			System.out.println("Book has been added");
 
 		} catch (Exception e) {
@@ -53,11 +59,15 @@ public class libraryDAO {
 	// Issuing book to Student from the Library
 	public void issueBook(int id, int st_id, String st_name, String issue_date, String return_date) {
 		try (Connection mycon = libraryDButil.LibraryConnection();
+<<<<<<< HEAD
 				PreparedStatement pstmtSelect = mycon.prepareStatement("SELECT * FROM books WHERE book_id = ?");
 				PreparedStatement pstmtUpdate = mycon
 						.prepareStatement("UPDATE books SET available = 0 WHERE book_id = ?");
 				PreparedStatement pstmtInsert = mycon.prepareStatement(
 						"INSERT INTO Student (St_id, St_name, Book_id, Issue_date, Return_date, Borrow) VALUES (?, ?, ?, ?, ?, 'Borrowed')")) {
+=======
+				PreparedStatement pstmtSelect = mycon.prepareStatement("SELECT * FROM books WHERE book_id = ?");) {
+>>>>>>> 1e3afc53d89e6a69a5f8d122d9c38b870ec78f6b
 
 			// Set the book_id parameter for the SELECT statement
 			pstmtSelect.setInt(1, id);
@@ -68,9 +78,16 @@ public class libraryDAO {
 
 				if (availability == 1) {
 					// Update the availability of the book
+<<<<<<< HEAD
+=======
+					PreparedStatement pstmtUpdate = mycon
+							.prepareStatement("UPDATE books SET available = 0 WHERE book_id = ?");
+>>>>>>> 1e3afc53d89e6a69a5f8d122d9c38b870ec78f6b
 					pstmtUpdate.setInt(1, id);
 					int rows = pstmtUpdate.executeUpdate();
 					if (rows > 0) {
+						PreparedStatement pstmtInsert = mycon.prepareStatement(
+								"INSERT INTO Student (St_id, St_name, Book_id, Issue_date, Return_date, Borrow) VALUES (?, ?, ?, ?, ?, 'Borrowed')");
 						System.out.println(bookName + " Book has been issued.");
 						// Insert the record into the Student table
 						pstmtInsert.setInt(1, st_id);
@@ -93,6 +110,7 @@ public class libraryDAO {
 
 	// Return Book to the Library
 	public void returnBook(int id, String returning_date) throws libraryExceptions {
+<<<<<<< HEAD
 		try (Connection mycon = libraryDButil.LibraryConnection()) {
 			Statement mystmt = mycon.createStatement();
 			ResultSet imyrs1 = mystmt.executeQuery("SELECT * FROM books WHERE book_id = " + id);
@@ -138,7 +156,67 @@ public class libraryDAO {
 		} catch (Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
+=======
+	    try (Connection mycon = libraryDButil.LibraryConnection()) {
+	    	PreparedStatement pstmt = mycon.prepareStatement("SELECT * FROM books WHERE book_id = ?");
+	        pstmt.setInt(1, id);
+	        ResultSet imyrs1 = pstmt.executeQuery();
+	        if (imyrs1.next()) {
+	            int availability = imyrs1.getInt("Available");
+	            if (availability == 0) {
+	                pstmt = mycon.prepareStatement("UPDATE books SET available = 1 WHERE book_id = ?");
+	                pstmt.setInt(1, id);
+	                int rowsAffected = pstmt.executeUpdate();
+	                if (rowsAffected > 0) {
+	                    pstmt = mycon.prepareStatement("SELECT * FROM student WHERE book_id = ?");
+	                    pstmt.setInt(1, id);
+	                    ResultSet imyrs = pstmt.executeQuery();
+	                    if (imyrs.next()) {
+	                        String studentName = imyrs.getString("St_name");
+	                        int studentId = imyrs.getInt("St_id");
+	                        String return_date = imyrs.getString("Return_date");
+	                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	                        LocalDate startDate = LocalDate.parse(return_date, formatter);
+	                        LocalDate endDate = LocalDate.parse(returning_date, formatter);
+	                        long days = ChronoUnit.DAYS.between(startDate, endDate);
+	                        if (days > 0) {
+	                            int fees = (int) days * 10;
+	                            // Insert fine record into the Fine table
+	                            pstmt = mycon.prepareStatement("INSERT INTO Fine (St_id, St_name, Book_id, Returned_date, Days_delayed, Fine_fees) "
+	                                    + "VALUES (?, ?, ?, ?, ?, ?)");
+	                            pstmt.setInt(1, studentId);
+	                            pstmt.setString(2, studentName);
+	                            pstmt.setInt(3, id);
+	                            pstmt.setString(4, returning_date);
+	                            pstmt.setLong(5, days);
+	                            pstmt.setInt(6, fees);
+	                            pstmt.executeUpdate();
+	                            // Update borrow status to 'Returned' in the Student table
+	                            pstmt = mycon.prepareStatement("UPDATE student SET borrow = 'Returned' WHERE book_id = ?");
+	                            pstmt.setInt(1, id);
+	                            pstmt.executeUpdate();
+	                            System.out.println("Book has been returned after " + days
+	                                    + " day(s), and the fine will be Rs." + fees);
+	                        } else {
+	                            System.out.println("Book has been returned.");
+	                        }
+	                    }
+	                    imyrs.close();
+	                } else {
+	                    throw new libraryExceptions("Invalid Id. Please enter a valid id and try again.");
+	                }
+	            } else {
+	                System.out.println("Book is already Available.");
+	            }
+	        } else {
+	            throw new libraryExceptions("Invalid Id. Please enter a valid id and try again.");
+	        }
+	    } catch (Exception e) {
+	        System.out.println("An error occurred: " + e.getMessage());
+	    }
+>>>>>>> 1e3afc53d89e6a69a5f8d122d9c38b870ec78f6b
 	}
+
 
 	// Updating Existing Book in the Library
 	public void updateExistingBook(int id, String name, String author, int price) {

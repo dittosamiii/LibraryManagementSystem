@@ -26,7 +26,7 @@ public class libraryController {
 
 	// Helper name function
 	public boolean validateName(String name) {
-		return name.matches("[a-zA-Z ]+");
+		return name.matches("[a-zA-Z .]+");
 	}
 
 	// Helper Input name Validation function
