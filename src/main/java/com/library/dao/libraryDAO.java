@@ -11,8 +11,8 @@ import java.time.temporal.ChronoUnit;
 import com.library.databaseutil.libraryDButil;
 import com.library.exception.libraryExceptions;
 
-public class libraryDAO {
-	public libraryDAO() {
+public class LibraryDAO {
+	public LibraryDAO() {
 		System.out.println("------------------------");
 		System.out.println(" Welcome to the Library");
 		System.out.println("------------------------");
@@ -99,6 +99,7 @@ public class libraryDAO {
 	}
 
 	// Return Book to the Library
+        @SuppressWarnings("ConvertToTryWithResources")
 	public void returnBook(int id, String returning_date) throws libraryExceptions {
 		try (Connection mycon = libraryDButil.LibraryConnection()) {
 			Statement mystmt = mycon.createStatement();
