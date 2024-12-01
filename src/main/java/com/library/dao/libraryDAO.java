@@ -22,9 +22,8 @@ public class libraryDAO {
 	public void showAvailableBooks() {
 		try (Connection mycon = libraryDButil.LibraryConnection();
 				PreparedStatement pstmt = mycon.prepareStatement("SELECT * FROM books");
-<<<<<<< HEAD
 				ResultSet myrs = pstmt.executeQuery()) {
-=======
+
 
 			System.out.println("Books Available in the Library");
 			System.out.println("ID\t\tName\t\t\tAuthor\t\t\t  Price\t    Availability");
@@ -59,15 +58,7 @@ public class libraryDAO {
 	// Issuing book to Student from the Library
 	public void issueBook(int id, int st_id, String st_name, String issue_date, String return_date) {
 		try (Connection mycon = libraryDButil.LibraryConnection();
-<<<<<<< HEAD
-				PreparedStatement pstmtSelect = mycon.prepareStatement("SELECT * FROM books WHERE book_id = ?");
-				PreparedStatement pstmtUpdate = mycon
-						.prepareStatement("UPDATE books SET available = 0 WHERE book_id = ?");
-				PreparedStatement pstmtInsert = mycon.prepareStatement(
-						"INSERT INTO Student (St_id, St_name, Book_id, Issue_date, Return_date, Borrow) VALUES (?, ?, ?, ?, ?, 'Borrowed')")) {
-=======
 				PreparedStatement pstmtSelect = mycon.prepareStatement("SELECT * FROM books WHERE book_id = ?");) {
->>>>>>> 1e3afc53d89e6a69a5f8d122d9c38b870ec78f6b
 
 			// Set the book_id parameter for the SELECT statement
 			pstmtSelect.setInt(1, id);
@@ -78,11 +69,10 @@ public class libraryDAO {
 
 				if (availability == 1) {
 					// Update the availability of the book
-<<<<<<< HEAD
-=======
+
 					PreparedStatement pstmtUpdate = mycon
 							.prepareStatement("UPDATE books SET available = 0 WHERE book_id = ?");
->>>>>>> 1e3afc53d89e6a69a5f8d122d9c38b870ec78f6b
+
 					pstmtUpdate.setInt(1, id);
 					int rows = pstmtUpdate.executeUpdate();
 					if (rows > 0) {
@@ -110,7 +100,6 @@ public class libraryDAO {
 
 	// Return Book to the Library
 	public void returnBook(int id, String returning_date) throws libraryExceptions {
-<<<<<<< HEAD
 		try (Connection mycon = libraryDButil.LibraryConnection()) {
 			Statement mystmt = mycon.createStatement();
 			ResultSet imyrs1 = mystmt.executeQuery("SELECT * FROM books WHERE book_id = " + id);
@@ -156,7 +145,6 @@ public class libraryDAO {
 		} catch (Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
-=======
 	    try (Connection mycon = libraryDButil.LibraryConnection()) {
 	    	PreparedStatement pstmt = mycon.prepareStatement("SELECT * FROM books WHERE book_id = ?");
 	        pstmt.setInt(1, id);
@@ -214,7 +202,6 @@ public class libraryDAO {
 	    } catch (Exception e) {
 	        System.out.println("An error occurred: " + e.getMessage());
 	    }
->>>>>>> 1e3afc53d89e6a69a5f8d122d9c38b870ec78f6b
 	}
 
 
