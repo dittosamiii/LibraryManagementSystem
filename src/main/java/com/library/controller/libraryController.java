@@ -5,13 +5,17 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-import com.library.dao.libraryDAO;
-import com.library.exception.libraryExceptions;
+import com.library.dao.LibraryDAO;
+import com.library.exception.LibraryExceptions;
 
-public class libraryController {
+public class LibraryController {
 
 	Scanner sc = new Scanner(System.in);
-	libraryDAO lib = new libraryDAO();
+	LibraryDAO lib;
+
+    public LibraryController() {
+        this.lib = new LibraryDAO();
+    }
 
 	// Helper function for date Validation
 	public boolean isValidDate(String dateString) {
@@ -68,7 +72,7 @@ public class libraryController {
 	}
 
 	// Issue Book Method
-	public void issueBook() throws libraryExceptions {
+	public void issueBook() throws LibraryExceptions {
 		int id, st_id;
 		String st_name, issue_date, return_date;
 
@@ -112,7 +116,7 @@ public class libraryController {
 	}
 
 	// Return Book Method
-	public void returnBook() throws libraryExceptions {
+	public void returnBook() throws LibraryExceptions {
 		int id;
 		String days;
 
@@ -169,7 +173,7 @@ public class libraryController {
 		lib.updateExistingBook(id, name, author, price);
 	}
 
-	public void deletingBook() throws libraryExceptions {
+	public void deletingBook() throws LibraryExceptions {
 		int id;
 
 		// Validate id

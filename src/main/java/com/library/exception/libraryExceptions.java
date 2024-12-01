@@ -1,8 +1,8 @@
 package com.library.exception;
 
 @SuppressWarnings("serial")
-public class libraryExceptions extends Exception {
-	public libraryExceptions(String message) {
+public class LibraryExceptions extends Exception {
+	public LibraryExceptions(String message) {
 		super(message);
 	}
 }

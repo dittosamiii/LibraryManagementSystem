@@ -8,8 +8,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
-import com.library.databaseutil.libraryDButil;
-import com.library.exception.libraryExceptions;
+import com.library.databaseutil.LibraryDButil;
+import com.library.exception.LibraryExceptions;
 
 public class LibraryDAO {
 	public LibraryDAO() {
@@ -20,7 +20,7 @@ public class LibraryDAO {
 
 	// Fetching books from database using this showAvailableBooks Method
 	public void showAvailableBooks() {
-		try (Connection mycon = libraryDButil.LibraryConnection();
+		try (Connection mycon = LibraryDButil.LibraryConnection();
 				PreparedStatement pstmt = mycon.prepareStatement("SELECT * FROM books");
 				ResultSet myrs = pstmt.executeQuery()) {
 
@@ -39,7 +39,7 @@ public class LibraryDAO {
 
 	// Adding books to our database using addBook Method
 	public void addBook(String name, String author, int price) {
-		try (Connection mycon = libraryDButil.LibraryConnection();
+		try (Connection mycon = LibraryDButil.LibraryConnection();
 				PreparedStatement pstmt = mycon.prepareStatement(
 						"insert into books (Book_name, Authors_name, Price, Available) values (?,?,?,1)");) {
 
@@ -57,7 +57,7 @@ public class LibraryDAO {
 
 	// Issuing book to Student from the Library
 	public void issueBook(int id, int st_id, String st_name, String issue_date, String return_date) {
-		try (Connection mycon = libraryDButil.LibraryConnection();
+		try (Connection mycon = LibraryDButil.LibraryConnection();
 				PreparedStatement pstmtSelect = mycon.prepareStatement("SELECT * FROM books WHERE book_id = ?");) {
 
 			// Set the book_id parameter for the SELECT statement
@@ -91,7 +91,7 @@ public class LibraryDAO {
 					System.out.println("Book is Unavailable");
 				}
 			} else {
-				throw new libraryExceptions("Invalid Id. Please Enter the valid id and try again.");
+				throw new LibraryExceptions("Invalid Id. Please Enter the valid id and try again.");
 			}
 		} catch (Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
@@ -100,8 +100,8 @@ public class LibraryDAO {
 
 	// Return Book to the Library
         @SuppressWarnings("ConvertToTryWithResources")
-	public void returnBook(int id, String returning_date) throws libraryExceptions {
-		try (Connection mycon = libraryDButil.LibraryConnection()) {
+	public void returnBook(int id, String returning_date) throws LibraryExceptions {
+		try (Connection mycon = LibraryDButil.LibraryConnection()) {
 			Statement mystmt = mycon.createStatement();
 			ResultSet imyrs1 = mystmt.executeQuery("SELECT * FROM books WHERE book_id = " + id);
 			if (imyrs1.next()) {
@@ -135,18 +135,18 @@ public class LibraryDAO {
 						}
 						imyrs.close();
 					} else {
-						throw new libraryExceptions("Invalid Id. Please enter a valid id and try again.");
+						throw new LibraryExceptions("Invalid Id. Please enter a valid id and try again.");
 					}
 				} else {
 					System.out.println("Book is already Available.");
 				}
 			} else {
-				throw new libraryExceptions("Invalid Id. Please enter a valid id and try again.");
+				throw new LibraryExceptions("Invalid Id. Please enter a valid id and try again.");
 			}
 		} catch (Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
 		}
-	    try (Connection mycon = libraryDButil.LibraryConnection()) {
+	    try (Connection mycon = LibraryDButil.LibraryConnection()) {
 	    	PreparedStatement pstmt = mycon.prepareStatement("SELECT * FROM books WHERE book_id = ?");
 	        pstmt.setInt(1, id);
 	        ResultSet imyrs1 = pstmt.executeQuery();
@@ -192,13 +192,13 @@ public class LibraryDAO {
 	                    }
 	                    imyrs.close();
 	                } else {
-	                    throw new libraryExceptions("Invalid Id. Please enter a valid id and try again.");
+	                    throw new LibraryExceptions("Invalid Id. Please enter a valid id and try again.");
 	                }
 	            } else {
 	                System.out.println("Book is already Available.");
 	            }
 	        } else {
-	            throw new libraryExceptions("Invalid Id. Please enter a valid id and try again.");
+	            throw new LibraryExceptions("Invalid Id. Please enter a valid id and try again.");
 	        }
 	    } catch (Exception e) {
 	        System.out.println("An error occurred: " + e.getMessage());
@@ -208,7 +208,7 @@ public class LibraryDAO {
 
 	// Updating Existing Book in the Library
 	public void updateExistingBook(int id, String name, String author, int price) {
-		try (Connection mycon = libraryDButil.LibraryConnection();
+		try (Connection mycon = LibraryDButil.LibraryConnection();
 				PreparedStatement pstmt = mycon.prepareStatement(
 						"UPDATE books SET Book_name = ?, Authors_name = ?, Price = ? WHERE book_id = ?")) {
 
@@ -221,7 +221,7 @@ public class LibraryDAO {
 			if (rowsAffected > 0) {
 				System.out.println("Book has been updated");
 			} else {
-				throw new libraryExceptions("Invalid ID. Please enter a valid ID and try again.");
+				throw new LibraryExceptions("Invalid ID. Please enter a valid ID and try again.");
 			}
 		} catch (Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());
@@ -229,8 +229,8 @@ public class LibraryDAO {
 	}
 
 	// Delete Existing Book from the Library
-	public void deletingBook(int id) throws libraryExceptions {
-		try (Connection mycon = libraryDButil.LibraryConnection();
+	public void deletingBook(int id) throws LibraryExceptions {
+		try (Connection mycon = LibraryDButil.LibraryConnection();
 				PreparedStatement pstmtSelect = mycon.prepareStatement("SELECT Available FROM Books WHERE Book_id = ?");
 				PreparedStatement pstmtDelete = mycon
 						.prepareStatement("DELETE FROM Books WHERE Book_id = ? AND Available = 1")) {
@@ -253,7 +253,7 @@ public class LibraryDAO {
 					System.out.println("Book is not available");
 				}
 			} else {
-				throw new libraryExceptions("Invalid Book ID. Please enter a valid ID and try again.");
+				throw new LibraryExceptions("Invalid Book ID. Please enter a valid ID and try again.");
 			}
 		} catch (Exception e) {
 			System.out.println("An error occurred: " + e.getMessage());

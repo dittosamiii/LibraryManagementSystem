@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class libraryDButil {
+public class LibraryDButil {
 	public static Connection LibraryConnection() {
 		Connection mycon = null;
 
@@ -16,7 +16,6 @@ public class libraryDButil {
 
 		} catch (SQLException e) {
 			System.out.println("Connection ERROR!");
-			e.printStackTrace();
 		}
 
 		return mycon;

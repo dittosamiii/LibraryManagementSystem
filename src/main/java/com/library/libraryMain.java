@@ -1,11 +1,11 @@
 package com.library;
 
-import com.library.exception.libraryExceptions;
-import com.library.libInterface.libraryInterface;
+import com.library.exception.LibraryExceptions;
+import com.library.libInterface.LibraryInterface;
 
 public class LibraryMain {
-	public static void main(String[] args) throws libraryExceptions {
-		libraryInterface libraryInterface = new libraryInterface();
+	public static void main(String[] args) throws LibraryExceptions {
+		LibraryInterface libraryInterface = new LibraryInterface();
 		libraryInterface.Interface();
 	}
 }
