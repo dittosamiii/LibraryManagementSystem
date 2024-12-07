@@ -11,11 +11,7 @@ import com.library.exception.LibraryExceptions;
 public class LibraryController {
 
 	Scanner sc = new Scanner(System.in);
-	LibraryDAO lib;
-
-    public LibraryController() {
-        this.lib = new LibraryDAO();
-    }
+	LibraryDAO lib = new LibraryDAO();
 
 	// Helper function for date Validation
 	public boolean isValidDate(String dateString) {

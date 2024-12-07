@@ -3,7 +3,6 @@ package com.library.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -22,8 +21,7 @@ public class LibraryDAO {
 	public void showAvailableBooks() {
 		try (Connection mycon = LibraryDButil.LibraryConnection();
 				PreparedStatement pstmt = mycon.prepareStatement("SELECT * FROM books");
-				ResultSet myrs = pstmt.executeQuery()) {
-
+				ResultSet myrs = pstmt.executeQuery();) {
 
 			System.out.println("Books Available in the Library");
 			System.out.println("ID\t\tName\t\t\tAuthor\t\t\t  Price\t    Availability");
@@ -69,10 +67,8 @@ public class LibraryDAO {
 
 				if (availability == 1) {
 					// Update the availability of the book
-
 					PreparedStatement pstmtUpdate = mycon
 							.prepareStatement("UPDATE books SET available = 0 WHERE book_id = ?");
-
 					pstmtUpdate.setInt(1, id);
 					int rows = pstmtUpdate.executeUpdate();
 					if (rows > 0) {
@@ -99,52 +95,7 @@ public class LibraryDAO {
 	}
 
 	// Return Book to the Library
-    public void returnBook(int id, String returning_date) throws LibraryExceptions {
-		try (Connection mycon = LibraryDButil.LibraryConnection()) {
-			Statement mystmt = mycon.createStatement();
-			ResultSet imyrs1 = mystmt.executeQuery("SELECT * FROM books WHERE book_id = " + id);
-			if (imyrs1.next()) {
-				int availability = imyrs1.getInt("Available");
-				if (availability == 0) {
-					int rowsAffected = mystmt.executeUpdate("UPDATE books SET available = 1 WHERE book_id = " + id);
-					if (rowsAffected > 0) {
-						ResultSet imyrs = mystmt.executeQuery("SELECT * FROM student WHERE book_id = " + id);
-						if (imyrs.next()) {
-							String studentName = imyrs.getString("St_name");
-							int studentId = imyrs.getInt("St_id");
-							String return_date = imyrs.getString("Return_date");
-							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-							LocalDate startDate = LocalDate.parse(return_date, formatter);
-							LocalDate endDate = LocalDate.parse(returning_date, formatter);
-							long days = ChronoUnit.DAYS.between(startDate, endDate);
-							if (days > 0) {
-								int fees = (int) days * 10;
-								// Insert fine record into the Fine table
-								mystmt.executeUpdate(
-										"INSERT INTO Fine (St_id, St_name, Book_id, Returned_date, Days_delayed, Fine_fees) "
-												+ "VALUES (" + studentId + ", '" + studentName + "', " + id + ", '"
-												+ returning_date + "', " + days + ", " + fees + ")");
-								// Update borrow status to 'Returned' in the Student table
-								mystmt.executeUpdate("UPDATE student SET borrow = 'Returned' WHERE book_id = " + id);
-								System.out.println("Book has been returned after " + days
-										+ " day(s), and the fine will be Rs." + fees);
-							} else {
-								System.out.println("Book has been returned.");
-							}
-						}
-						imyrs.close();
-					} else {
-						throw new LibraryExceptions("Invalid Id. Please enter a valid id and try again.");
-					}
-				} else {
-					System.out.println("Book is already Available.");
-				}
-			} else {
-				throw new LibraryExceptions("Invalid Id. Please enter a valid id and try again.");
-			}
-		} catch (Exception e) {
-			System.out.println("An error occurred: " + e.getMessage());
-		}
+	public void returnBook(int id, String returning_date) throws LibraryExceptions {
 	    try (Connection mycon = LibraryDButil.LibraryConnection()) {
 	    	PreparedStatement pstmt = mycon.prepareStatement("SELECT * FROM books WHERE book_id = ?");
 	        pstmt.setInt(1, id);
