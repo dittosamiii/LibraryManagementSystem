@@ -99,8 +99,7 @@ public class LibraryDAO {
 	}
 
 	// Return Book to the Library
-    @SuppressWarnings("ConvertToTryWithResources")
-	public void returnBook(int id, String returning_date) throws LibraryExceptions {
+    public void returnBook(int id, String returning_date) throws LibraryExceptions {
 		try (Connection mycon = LibraryDButil.LibraryConnection()) {
 			Statement mystmt = mycon.createStatement();
 			ResultSet imyrs1 = mystmt.executeQuery("SELECT * FROM books WHERE book_id = " + id);
