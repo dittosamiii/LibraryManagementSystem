@@ -26,9 +26,9 @@ public class LibraryDAO {
 				ResultSet myrs = pstmt.executeQuery()) {
 
 			System.out.println("\nBooks Available in the Library:");
-			System.out.println("----------------------------------------------------------------------------------");
+			System.out.println("--------------------------------------------------------------------------------------------------");
 			System.out.printf("%-5s %-30s %-30s %-10s %s%n", "ID", "Name", "Author", "Price", "Availability");
-			System.out.println("-----------------------------------------------------------------------------------");
+			System.out.println("--------------------------------------------------------------------------------------------------");
 
 			boolean hasBooks = false;
 			while (myrs.next()) {
