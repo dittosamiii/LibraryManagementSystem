@@ -27,10 +27,10 @@ public class LibraryDAO {
 
 			System.out.println("\nBooks Available in the Library:");
 			System.out.println(
-					"----------------------------------------------------------------------------------------------------------------------");
+					"----------------------------------------------------------------------------------------------------");
 			System.out.printf("%-5s %-30s %-30s %-10s %s%n", "ID", "Name", "Author", "Price", "Availability");
 			System.out.println(
-					"----------------------------------------------------------------------------------------------------------------------");
+					"----------------------------------------------------------------------------------------------------");
 
 			boolean hasBooks = false;
 			while (myrs.next()) {
@@ -153,14 +153,6 @@ public class LibraryDAO {
 				LocalDate endDate = LocalDate.parse(returning_date, formatter);
 				long days = ChronoUnit.DAYS.between(startDate, endDate);
 
-				if (days < 0) {
-					System.out.println("Invalid return date.");
-					pstmt = mycon.prepareStatement("UPDATE books SET available = 0 WHERE book_id = ?");
-					pstmt.setInt(1, id);
-					pstmt.executeUpdate();
-					return;
-				}
-
 				if (days > 0) {
 					int fees = (int) days * 10;
 					pstmt = mycon.prepareStatement(
@@ -175,12 +167,21 @@ public class LibraryDAO {
 					System.out.println("Book returned after " + days + " day(s). Fine: Rs. " + fees);
 				} else {
 					System.out.println("Book has been returned on time.");
+					// Update student borrow status
+					pstmt = mycon.prepareStatement("UPDATE student SET borrow = 'Returned' WHERE book_id = ?");
+					pstmt.setInt(1, id);
+					pstmt.executeUpdate();
+					return;
 				}
 
-				// Update student borrow status
-				pstmt = mycon.prepareStatement("UPDATE student SET borrow = 'Returned' WHERE book_id = ?");
-				pstmt.setInt(1, id);
-				pstmt.executeUpdate();
+				if (days < 0) {
+					System.out.println("Invalid return date.");
+					pstmt = mycon.prepareStatement("UPDATE books SET available = 0 WHERE book_id = ?");
+					pstmt.setInt(1, id);
+					pstmt.executeUpdate();
+					return;
+				}
+
 			} else {
 				System.out.println("Student record not found for the returned book.");
 			}
